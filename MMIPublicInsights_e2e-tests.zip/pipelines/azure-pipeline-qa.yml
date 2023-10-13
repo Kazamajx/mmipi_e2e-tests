@@ -1,0 +1,27 @@
+######################## TRIGGERS ########################
+# No CI trigger
+trigger: none
+# Schedueled trigger
+schedules:
+  - cron: "0 0 * * *"
+    displayName: Daily midnight build
+    branches:
+      include:
+      - master
+    always: true
+
+######################## ENVIRONMENT + VARIABLES ########################
+  
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  # Build configurations
+  appConfiguration: 'production'
+  
+########################### STEPS TO FOLLOW ############################
+jobs:
+  - template: ./template/e2e-test-template.yml
+    parameters:
+      WorkingDir: "$(Build.SourcesDirectory)/cypress/results"
+      CustomCommand: "run cypress:run:test"     

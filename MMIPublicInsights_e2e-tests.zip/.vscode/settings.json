@@ -1,0 +1,26 @@
+{
+  "typescript.tsdk": "node_modules\\typescript\\lib",
+  // Set the default
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": false,
+  // Enable per-language
+  "[typescript]": {
+    "editor.formatOnSave": true
+  },
+  "[javascript]": {
+    "editor.formatOnSave": true
+  },
+  "[json]": {
+    "editor.formatOnSave": true
+  },
+  "[scss]": {
+    "editor.formatOnSave": true
+  },
+  "[html]": {
+    "editor.formatOnSave": true
+  },
+  "[feature]": {
+    "editor.formatOnSave": false
+  },
+  "cucumberautocomplete.skipDocStringsFormat": true
+}

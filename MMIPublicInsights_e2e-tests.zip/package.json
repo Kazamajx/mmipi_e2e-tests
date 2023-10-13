@@ -1,0 +1,48 @@
+{
+  "name": "cypress_with_cucumber",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "cypress:run": "cypress run",
+    "cypress:debug": "cross-env CYPRESS_REMOTE_DEBUGGING_PORT=9222 cypress open",
+    "cypress:run:dev": "npx cypress run --env configFile=cypress.config.dev",
+    "cypress:run:test": "npx cypress run --env configFile=cypress.config.test",
+    "cypress:run:stage": "npx cypress run --env configFile=cypress.config.stage",
+    "cypress:run:prod": "npx cypress run --env configFile=cypress.config.prod"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@badeball/cypress-cucumber-preprocessor": "^15.1.1",
+    "@bahmutov/cypress-esbuild-preprocessor": "^2.1.5",
+    "@deepakvishwakarma/cucumber-json-formatter": "^0.0.3",
+    "cross-env": "^7.0.3",
+    "cucumber-html-reporter": "^5.5.0",
+    "cypress": "^12.3.0",
+    "cypress-iframe": "^1.0.1",
+    "cypress-multi-reporters": "^1.5.0",
+    "cypress-pipe": "^2.0.0",
+    "mocha-junit-reporter": "^2.0.0",
+    "typescript": "^3.5.3"
+  },
+  "cypress-cucumber-preprocessor": {
+    "nonGlobalStepDefinitions": true,
+    "stepDefinitions": [
+      "[filepath].{js,ts}",
+      "cypress/e2e/**/*.{js,ts}"
+    ],
+    "json": {
+      "enabled": true,
+      "output": "cypress/generated/log.json",
+      "formatter": "node",
+      "args": [
+        "./node_modules/@deepakvishwakarma/cucumber-json-formatter/lib/main.js"
+      ]
+    }
+  },
+  "dependencies": {
+    "uuid": "^9.0.0"
+  }
+}

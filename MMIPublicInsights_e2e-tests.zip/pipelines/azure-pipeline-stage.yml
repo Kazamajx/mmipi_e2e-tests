@@ -1,0 +1,19 @@
+######################## TRIGGERS ########################
+# No CI trigger
+trigger: none
+
+######################## ENVIRONMENT + VARIABLES ########################
+  
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  # Build configurations
+  appConfiguration: 'production'
+  
+########################### STEPS TO FOLLOW ############################
+jobs:
+  - template: ./template/e2e-test-template.yml
+    parameters:
+      WorkingDir: "$(Build.SourcesDirectory)/cypress/results"
+      CustomCommand: "run cypress:run:stage"     

@@ -1,0 +1,78 @@
+parameters:
+- name: CustomCommand
+  type: string
+- name: WorkingDir
+  type: string
+
+jobs:
+  - job: Test
+    timeoutInMinutes: 360 # 6h
+    steps:
+      - checkout: self
+        displayName: 'Checkout'
+
+      - task: NodeTool@0
+        inputs:
+          versionSpec: '16.x'
+      
+      - task: Npm@1
+        displayName: 'Install dependencies'
+        inputs:
+          command: 'install'
+
+      - script: rm -rf ${{ parameters.WorkingDir }}                                         
+      
+
+      - task: Npm@1
+        displayName: 'Runs Tests'
+        inputs:
+          command: 'custom'
+          customCommand: '${{ parameters.CustomCommand }}'
+        continueOnError: true
+
+      - task: PublishCucumberReport@1
+        displayName: 'Publish Cucumber Report'
+        inputs:
+          jsonDir: $(Build.SourcesDirectory)/cypress/generated
+          outputPath: $(Build.SourcesDirectory)/cypress/results
+
+      # Check if cypress/screenshots folder exists. This check will prevent pipeline to fail
+      - task: Bash@3
+        inputs:
+          targetType: 'inline'
+          script: |
+            if [ -d $(Build.SourcesDirectory)/cypress/screenshots ]; then
+              echo "##vso[task.setVariable variable=SCREENSHOTSEXIST]true"
+            fi
+      
+      - task: PublishBuildArtifacts@1
+        inputs:
+          pathtoPublish: '$(Build.SourcesDirectory)/cypress/screenshots'
+          artifactName: 'screenshots'
+        continueOnError: true
+        condition: eq(variables.SCREENSHOTSEXIST, true)
+
+      # Check if cypress/videos folder exists. This check will prevent pipeline to fail
+      - task: Bash@3
+        inputs:
+          targetType: 'inline'
+          script: |
+            if [ -d $(Build.SourcesDirectory)/cypress/videos ]; then
+              echo "##vso[task.setVariable variable=VIDEOSEXIST]true"
+            fi
+
+      - task: PublishBuildArtifacts@1
+        inputs:
+          pathtoPublish: '$(Build.SourcesDirectory)/cypress/videos'
+          artifactName: 'videos'
+        continueOnError: true
+        condition: eq(variables.VIDEOSEXIST, true)
+
+      - task: PublishTestResults@2
+        displayName: 'Publish artifacts'
+        inputs:
+          searchFolder: '$(Build.SourcesDirectory)/cypress/results'
+          testResultsFormat: 'JUnit'
+          testResultsFiles: '**/*.xml'
+          publishRunAttachments: true
+          failTaskOnFailedTests: true
