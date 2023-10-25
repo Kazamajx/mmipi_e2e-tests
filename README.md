@@ -8,5 +8,4 @@ This project is about e2e testing on MMI Public Insights platform. E2E tests are
 
 
 # Build and Test
-1. After you create your test following this guide: "https://sixth-sense.atlassian.net/wiki/spaces/DT/pages/925990939/E2E+testing+Proposal"
-you can run them from cypress. To open cypress run the command: "npx cypress open".
+1. To build tests open cypress running the command: "npx cypress open".
